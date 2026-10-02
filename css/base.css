@@ -1,0 +1,1231 @@
+/* NBD promo site — base.css
+   The app's design system (docs/design/DESIGN.md, tokens.json) as CSS: tokens, fonts, reset, type roles,
+   primitives, the chrome (top bar, HUD, footer) and layout helpers. Sections build on this; their own CSS
+   lives in css/sections/<id>.css. The kitchen sink is site/_dev/kit.html.
+
+   Rules that are not taste:
+   - Red (--red) = the brand dot, the primary LANDED!/capture action, the learning state. Nothing else.
+   - Yellow (--yellow) = XP and level. Nothing else.
+   - Segment colours belong to the lines. Never alpha on line colours: use the premixed -reach / -unlit.
+   - Shadows are hard offsets, blur 0: #000 on grip, ink on paper (inside .paper the --sh-* tokens turn ink).
+   - Glow only for light pools and the learning pulse. No blur, no glass, no gradients but pools and scrims.
+   - Primitives tilt with the `rotate` property and press with `translate`, so `transform` stays free for
+     section animations (they compose).
+*/
+
+/* ================================================================ fonts */
+
+@font-face { font-family: 'Sofia Sans Extra Condensed'; font-weight: 800; font-style: normal; font-display: swap; src: url('../assets/fonts/sofia-800.woff2') format('woff2'); }
+@font-face { font-family: 'Sofia Sans Extra Condensed'; font-weight: 900; font-style: normal; font-display: swap; src: url('../assets/fonts/sofia-900.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-weight: 400; font-style: normal; font-display: swap; src: url('../assets/fonts/onest-400.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-weight: 500; font-style: normal; font-display: swap; src: url('../assets/fonts/onest-500.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-weight: 600; font-style: normal; font-display: swap; src: url('../assets/fonts/onest-600.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 500; font-style: normal; font-display: swap; src: url('../assets/fonts/mono-500.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 700; font-style: normal; font-display: swap; src: url('../assets/fonts/mono-700.woff2') format('woff2'); }
+@font-face { font-family: 'Caveat'; font-weight: 700; font-style: normal; font-display: swap; src: url('../assets/fonts/caveat-700.woff2') format('woff2'); }
+/* Swap fallback for the display face, squeezed to Sofia's width so the poster lines barely move when it arrives. */
+@font-face {
+  font-family: 'NBD Display Fallback';
+  src: local('HelveticaNeue-CondensedBlack'), local('Helvetica Neue Condensed Black'), local('ArialNarrow-Bold'), local('Arial Narrow Bold'), local('Roboto Condensed Bold'), local('RobotoCondensed-Bold');
+  font-weight: 800 900;
+  /* measured in Chrome: Sofia 900 sets a line at 78 % of Helvetica Neue Condensed Black / Arial Narrow Bold;
+     ascent 0.90 / descent 0.30 em like Sofia, divided by the 0.78 the overrides are scaled by */
+  size-adjust: 78%;
+  ascent-override: 115%;
+  descent-override: 38%;
+}
+
+/* ================================================================ tokens */
+
+:root {
+  /* chrome */
+  --grip: #0F0F0E;
+  --surface-1: #181816;
+  --surface-2: #22221F;
+  --surface-3: #2E2E2A;
+  --hairline: #3A3A35;
+  --scrim: rgba(8, 8, 7, 0.72);
+  /* paper and ink */
+  --paper: #ECE6D6;
+  --paper-shade: #D9D2BF;
+  --paper-edge: #C4BCA6;
+  --ink: #11110F;
+  --ink-soft: #4A4840;
+  --ink-muted: #6B675C;
+  /* text on grip */
+  --text: #ECE6D6;
+  --text-2: #A8A392;
+  --text-muted: #8A8678;
+  /* action, XP, light */
+  --red: #FF4524;
+  --red-pressed: #D9361A;
+  --red-dim: #6A2416;
+  --red-on-paper: #B3270B;
+  --yellow: #FFD21A;
+  --yellow-dim: #6A5913;
+  --pool: #FFC98A;
+  /* neutral lines (interchange rings, connectors, cross links) */
+  --neutral-lit: #ECE6D6;
+  --neutral-reachable: #98948A;
+  --neutral-unlit: #63615A;
+  /* segment base colours (first line's lit colour; Grinds use G2) + premixed variants, dataset order */
+  --seg-basics: #EDE8D8;      --seg-basics-reach: #99968B;      --seg-basics-unlit: #63615B;
+  --seg-ollie: #FBA01D;       --seg-ollie-reach: #A16917;       --seg-ollie-unlit: #694614;
+  --seg-shuv: #28D3F4;        --seg-shuv-reach: #1E899D;        --seg-shuv-unlit: #185965;
+  --seg-flip: #FE429D;        --seg-flip-reach: #A32F67;        --seg-flip-unlit: #6A2244;
+  --seg-grind: #3CE074;       --seg-grind-reach: #2B914D;       --seg-grind-unlit: #205E35;
+  --seg-slide: #A785FC;       --seg-slide-reach: #6D58A2;       --seg-slide-unlit: #493C68;
+  --seg-manual: #37D8C9;      --seg-manual-reach: #288C82;      --seg-manual-unlit: #1E5B55;
+  --seg-oldschool: #D3B378;   --seg-oldschool-reach: #897550;   --seg-oldschool-unlit: #594D36;
+  --seg-transition: #689CFD;  --seg-transition-reach: #4666A2;  --seg-transition-unlit: #314569;
+  --seg-grab: #B5EF32;        --seg-grab-reach: #769A24;        --seg-grab-unlit: #4E641C;
+  /* achievement tiers */
+  --tier-bronze: #C98A55;  --tier-bronze-ghost: #825B3A;
+  --tier-silver: #C9CCD1;  --tier-silver-ghost: #828487;
+  --tier-gold: #FFD21A;    --tier-gold-ghost: #A48815;
+  --tier-legend: #ECE6D6;  --tier-legend-ghost: #98948A;
+
+  /* type */
+  --f-display: 'Sofia Sans Extra Condensed', 'NBD Display Fallback', 'Arial Narrow', sans-serif;
+  --f-body: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --f-hand: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+
+  /* motion */
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.7, 0, .84, 0);
+  --t-instant: 80ms;
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 350ms;
+  --t-enter: 450ms;
+
+  /* hard shadows (blur 0) — redefined in ink inside .paper */
+  --sh-color: #000;
+  --sh-sticker: 2px 2.5px 0 #000;
+  --sh-tag: 2px 2px 0 #000;
+  --sh-card: 3px 3px 0 #000;
+  --sh-btn: 4px 4px 0 #000;
+  --sh-pressed: 1px 1px 0 #000;
+
+  /* layout */
+  --gutter: clamp(16px, 2.286vw + 7.1px, 40px);
+  --wrap: 1240px;
+  --topbar-h: 56px;
+  --hud-h: 28px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --z-stage: 1;
+  --z-topbar: 50;
+  --z-hud: 52; /* over the top bar's scrim */
+  --z-overlay: 60;
+
+  /* surface-aware foregrounds (flip inside .paper) */
+  --fg: var(--text);
+  --fg-2: var(--text-2);
+  --fg-muted: var(--text-muted);
+  --rule: var(--hairline);
+
+  color-scheme: dark;
+}
+@media (min-width: 900px) {
+  :root { --topbar-h: 64px; }
+}
+
+/* ================================================================ reset */
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--grip);
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: auto;
+  /* Focus and anchor jumps land below the fixed chrome (top bar + HUD), never under it (WCAG 2.4.11). */
+  scroll-padding-top: calc(var(--safe-t) + var(--topbar-h) + var(--hud-h) + 24px); /* the focus ring clears the scrim too */
+  scroll-padding-bottom: calc(var(--safe-b) + 16px);
+}
+/* The grip grain: the app's static texture as the page's own background, scrolling with it and never animated.
+   (Not a fixed layer: a fixed full-screen layer under everything makes the browser composite all of <main> over
+   it.) A pinned stage paints its own grain (.pin below), so the texture stands still while the stage does. */
+body {
+  position: relative;
+  z-index: 0; /* a stacking context: negative z-index layers in sections paint over this grain, not under it */
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  color: var(--fg);
+  font: 400 1rem/1.5 var(--f-body);
+  background: url('../assets/tex/grain-grip.png') 0 0 / 256px 256px repeat;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overflow-x: clip; /* crop poster type at the edge without making a scroll container (sticky keeps working) */
+}
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul { margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+/* Zero specificity (:where): one class of a section's own sets a list's padding or a picture's size. */
+:where(ol[role='list'], ul[role='list'], .list-reset) { list-style: none; padding: 0; }
+/* Pictures never overflow their box. SVG is exempt: it is drawing more than picture here — strikes, rings and
+   arrows placed with position: absolute and sized past their box (a marker stroke 114 % of its word) — so it keeps
+   the size its own rule gives it; .fit-width clamps an in-flow one. A picture placed past its box takes .no-clamp. */
+:where(img, video, canvas, picture) { display: block; max-width: 100%; }
+:where(svg) { display: block; }
+:where(.fit-width) { max-width: 100%; }
+:where(.no-clamp) { max-width: none; }
+img { height: auto; }
+svg { overflow: visible; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; cursor: pointer; text-align: inherit; }
+/* Links underline in their own colour: paper on grip, ink on paper. Red is never a link colour (it is the brand
+   dot, LANDED!/capture and learning); a hover thickens the line instead. */
+a { color: inherit; text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; text-decoration-color: currentColor; }
+a:hover { text-decoration-thickness: 3px; }
+::selection { background: var(--paper); color: var(--ink); }
+.paper ::selection { background: var(--ink); color: var(--paper); }
+[hidden] { display: none !important; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+.paper :focus-visible, .topbar[data-over='paper'] :focus-visible { outline-color: var(--ink); }
+.icon { flex: none; }
+
+/* ================================================================ type roles (DESIGN §4, web-scaled) */
+
+.t-poster, .t-xl, .t-l, .t-m, .t-s, .t-heading {
+  font-family: var(--f-display);
+  text-transform: uppercase;
+  font-kerning: normal;
+  font-synthesis: none;
+}
+/* The page's huge section lines. Size with --poster-size; may crop at the viewport edge. */
+.t-poster {
+  font-weight: 900;
+  font-size: var(--poster-size, clamp(3.5rem, 16vw, 22rem));
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+}
+.t-poster--xl { --poster-size: clamp(4.5rem, 22vw, 26rem); }
+.t-poster--m { --poster-size: clamp(3rem, 11vw, 14rem); }
+/* displayXL: trick name in hero / celebration (104/88). */
+.t-xl { font-weight: 900; font-size: clamp(4rem, 9vw + 2.6rem, 9rem); line-height: 0.85; letter-spacing: -0.005em; }
+/* displayL: big numerals, XP total (60/54). */
+.t-l { font-weight: 900; font-size: clamp(2.75rem, 3vw + 2.1rem, 4.75rem); line-height: 0.9; letter-spacing: 0; }
+/* displayM: titles (34/32). */
+.t-m { font-weight: 900; font-size: clamp(2rem, 1.6vw + 1.6rem, 3rem); line-height: 0.94; letter-spacing: 0.01em; }
+/* displayS: rank names, card titles (26/26, 800). */
+.t-s { font-weight: 800; font-size: clamp(1.5rem, 0.6vw + 1.35rem, 2rem); line-height: 1; letter-spacing: 0.02em; }
+/* heading: section headings inside UI (20/22, 800). */
+.t-heading { font-weight: 800; font-size: clamp(1.25rem, 0.35vw + 1.17rem, 1.5rem); line-height: 1.1; letter-spacing: 0.04em; }
+/* bodyL / body / caption (Onest). */
+.t-body-l { font-family: var(--f-body); font-weight: 400; font-size: clamp(1.0625rem, 0.4vw + 0.97rem, 1.3125rem); line-height: 1.5; }
+.t-body { font-family: var(--f-body); font-weight: 400; font-size: clamp(0.9375rem, 0.15vw + 0.9rem, 1.0625rem); line-height: 1.45; }
+.t-strong { font-weight: 600; }
+.t-caption { font-family: var(--f-body); font-weight: 500; font-size: 0.8125rem; line-height: 1.3; }
+/* monoCaption: eyebrows, meta (uppercase, tracked, 11 px floor). */
+.t-mono { font-family: var(--f-mono); font-weight: 500; font-size: clamp(0.6875rem, 0.1vw + 0.66rem, 0.8125rem); line-height: 1.3; letter-spacing: 0.06em; text-transform: uppercase; }
+/* monoData: counters, dates, XP numbers (keeps case). */
+.t-mono-data { font-family: var(--f-mono); font-weight: 700; font-size: clamp(0.8125rem, 0.1vw + 0.78rem, 0.9375rem); line-height: 1.25; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+/* monoXp: "+110 XP" — yellow means XP. */
+.t-xp { font-family: var(--f-mono); font-weight: 700; font-size: clamp(0.6875rem, 0.15vw + 0.65rem, 0.875rem); line-height: 1.1; letter-spacing: 0.02em; text-transform: uppercase; color: var(--yellow); }
+/* hand: ONE Caveat accent per section, ≤ 4 words, −4…−8°. */
+.t-hand {
+  display: inline-block;
+  font-family: var(--f-hand);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1vw + 1.25rem, 2.25rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  rotate: -6deg;
+  transform-origin: 0 50%;
+}
+.fg-2 { color: var(--fg-2); }
+.fg-muted { color: var(--fg-muted); }
+.nowrap { white-space: nowrap; }
+
+/* ================================================================ surfaces */
+
+/* Paper with ink grain. Everything inside turns to ink: text, rules, focus ring, shadows. */
+.paper {
+  --fg: var(--ink);
+  --fg-2: var(--ink-soft);
+  --fg-muted: var(--ink-muted);
+  --rule: var(--ink);
+  --sh-color: var(--ink);
+  --sh-sticker: 2px 2.5px 0 var(--ink);
+  --sh-tag: 2px 2px 0 var(--ink);
+  --sh-card: 3px 3px 0 var(--ink);
+  --sh-btn: 4px 4px 0 var(--ink);
+  --sh-pressed: 1px 1px 0 var(--ink);
+  color: var(--ink);
+  background: url('../assets/tex/grain-paper.png') 0 0 / 256px 256px repeat, var(--paper);
+}
+/* Torn bottom edge (the trick hero): teeth 13 wide, 9–22 deep, irregular — the app's TornEdge. The last
+   22 px of the box are the tear; add padding-bottom ≥ 22px for content. */
+.paper--torn {
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 21px) no-repeat, url('../assets/tex/torn-bottom.svg') left bottom / 520px 22px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 21px) no-repeat, url('../assets/tex/torn-bottom.svg') left bottom / 520px 22px repeat-x;
+}
+.paper--torn-top {
+  -webkit-mask: linear-gradient(#000 0 0) bottom / 100% calc(100% - 21px) no-repeat, url('../assets/tex/torn-top.svg') left top / 520px 22px repeat-x;
+  mask: linear-gradient(#000 0 0) bottom / 100% calc(100% - 21px) no-repeat, url('../assets/tex/torn-top.svg') left top / 520px 22px repeat-x;
+}
+.paper--torn.paper--torn-top {
+  -webkit-mask: linear-gradient(#000 0 0) center / 100% calc(100% - 42px) no-repeat, url('../assets/tex/torn-top.svg') left top / 520px 22px repeat-x, url('../assets/tex/torn-bottom.svg') 37% bottom / 520px 22px repeat-x;
+  mask: linear-gradient(#000 0 0) center / 100% calc(100% - 42px) no-repeat, url('../assets/tex/torn-top.svg') left top / 520px 22px repeat-x, url('../assets/tex/torn-bottom.svg') 37% bottom / 520px 22px repeat-x;
+}
+/* Grip with grain as its own background (for a stage that paints over the page: a canvas stays transparent
+   and shows it through). */
+.grain { background: url('../assets/tex/grain-grip.png') 0 0 / 256px 256px repeat, var(--grip); }
+/* Grain over the content (for an opaque picture that should sit in the grip). */
+.grain--over { position: relative; }
+.grain--over::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url('../assets/tex/grain-grip.png') 0 0 / 256px 256px repeat;
+}
+.ink-surface { --fg: var(--paper); --fg-2: var(--paper-shade); background: var(--ink); color: var(--paper); }
+
+/* Card: surface-2 on grip, hairline, card shadow. */
+.card {
+  position: relative;
+  background: var(--surface-2);
+  border: 1.5px solid var(--hairline);
+  box-shadow: var(--sh-card);
+  padding: 14px 16px;
+}
+.card--flat { box-shadow: none; }
+.card--1 { background: var(--surface-1); }
+
+/* Rules */
+.hairline { display: block; height: 1px; border: 0; margin: 0; background: var(--rule); }
+.hairline--strong { height: 1.5px; }
+.paper .hairline:not(.hairline--strong) { background: var(--ink); height: 1.5px; }
+
+/* ================================================================ buttons (DESIGN §6) */
+
+.btn {
+  --btn-h: 56px;
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: var(--btn-h);
+  min-width: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 0;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--sh-btn);
+  font: 900 26px/1 var(--f-display);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition: translate var(--t-instant) var(--ease-standard), box-shadow var(--t-instant) var(--ease-standard), background-color var(--t-instant) linear;
+}
+.btn > span { display: block; padding-top: 0.06em; } /* Sofia sits high in its box: centre the caps optically */
+.btn .icon { width: 22px; height: 22px; stroke-width: 2; }
+.btn:active, .btn.is-pressed { translate: 3px 3px; box-shadow: var(--sh-pressed); }
+.btn--paper { --btn-bg: var(--paper); --btn-fg: var(--ink); }
+.btn--action { --btn-bg: var(--red); --btn-fg: var(--ink); }
+.btn--action:active, .btn--action.is-pressed { --btn-bg: var(--red-pressed); }
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  box-shadow: none;
+  border: 1.5px solid currentColor;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+}
+.btn--ghost:active, .btn--ghost.is-pressed { translate: 1px 1px; box-shadow: none; background: var(--surface-2); }
+.paper .btn--ghost:active, .paper .btn--ghost.is-pressed { background: var(--paper-shade); }
+/* Primary on paper: ink fill, and its shadow is a die-cut echo (a paper block with an ink outline). */
+.paper .btn--paper {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  box-shadow: 4px 4px 0 0 var(--paper), 4px 4px 0 1.5px var(--ink);
+}
+.paper .btn--paper:active, .paper .btn--paper.is-pressed { box-shadow: 1px 1px 0 0 var(--paper), 1px 1px 0 1.5px var(--ink); }
+/* Toggle on ("LEARNING"): border in the line colour + hazard stripes. Set --line / --line-unlit. */
+.btn--toggle {
+  --btn-bg: transparent;
+  --btn-fg: var(--paper);
+  box-shadow: none;
+  border: 2px solid var(--line, var(--seg-flip));
+  background-image: repeating-linear-gradient(-45deg, var(--line-unlit, var(--seg-flip-unlit)) 0 2.5px, transparent 2.5px 9px);
+  font-weight: 900;
+}
+.btn--toggle:active, .btn--toggle.is-pressed { translate: 1px 1px; box-shadow: none; }
+.btn--m { --btn-h: 48px; padding: 0 18px; font-size: 22px; gap: 10px; }
+.btn--m .icon { width: 20px; height: 20px; }
+.btn--s { --btn-h: 44px; padding: 0 14px; font-size: 18px; font-weight: 800; letter-spacing: 0.05em; gap: 8px; }
+.btn--s .icon { width: 18px; height: 18px; }
+.btn--ghost.btn--m, .btn--ghost.btn--s { font-size: 18px; }
+.btn--block { display: flex; width: 100%; }
+.btn:disabled, .btn.is-disabled, .btn[aria-disabled='true'] {
+  --btn-bg: var(--surface-3);
+  --btn-fg: var(--text-muted);
+  box-shadow: none;
+  border-color: transparent;
+  background-image: none;
+  translate: none;
+  cursor: default;
+}
+/* XP rides on the action button as an ink badge with yellow mono text. */
+.xp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 6px 2px;
+  background: var(--ink);
+  color: var(--yellow);
+  font: 700 13px/16px var(--f-mono);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn--action .xp-badge, .btn--paper .xp-badge { font-size: 15px; line-height: 18px; padding: 4px 7px 3px; }
+/* Hold-to-confirm progress edge (4 px paper along the bottom): drive it with transform: scaleX(0…1). */
+.btn__edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: var(--paper);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+/* Round icon button (40, hairline ring) and the capsule with a label (the map's LIST button). */
+.btn-round {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--fg);
+  background: var(--grip);
+  transition: translate var(--t-instant) var(--ease-standard), border-color var(--t-instant) linear;
+}
+.btn-round:active { translate: 1px 1px; }
+.btn-round .icon { width: 20px; height: 20px; }
+.btn-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 15px 0 12px;
+  border: 1.5px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--grip);
+  color: var(--fg);
+  font: 800 15px/1 var(--f-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: translate var(--t-instant) var(--ease-standard);
+}
+.btn-capsule:active { translate: 1px 1px; }
+.btn-capsule .icon { width: 19px; height: 19px; }
+
+/* ================================================================ chips (DESIGN §6: height 21, `chip` type) */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 21px;
+  padding: 1px 8px 0;
+  border-radius: 0;
+  font: 800 14px/14px var(--f-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.chip--locked { border: 1.5px dashed var(--text-muted); color: var(--text-2); padding-inline: 6.5px; }
+.chip--open { border: 1.5px solid var(--paper); color: var(--paper); padding-inline: 6.5px; }
+.chip--learning { background: var(--red); color: var(--ink); }
+.chip--learning::before, .chip--dot::before { content: ''; flex: none; width: 7px; height: 7px; border-radius: 50%; background: currentColor; margin-top: -1px; }
+.chip--landed { background: var(--paper); color: var(--ink); }
+/* On lock: ink fill, paper border and a paper keyline inside it — the double border of an on-lock node. */
+.chip--onlock {
+  height: 24px;
+  padding-inline: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1.5px solid var(--paper);
+  box-shadow: inset 0 0 0 1.5px var(--ink), inset 0 0 0 2.5px var(--paper);
+}
+.chip--combo { border: 3px solid var(--paper); color: var(--paper); padding-inline: 6px; }
+.chip--xp {
+  height: 23px;
+  padding: 1px 8px 0;
+  background: var(--ink);
+  color: var(--yellow);
+  border: 1px solid var(--hairline);
+  font: 700 13px/16px var(--f-mono);
+  letter-spacing: 0.02em;
+}
+/* On paper every state keeps its silhouette in ink (src/ui/primitives/Chip.tsx PAPER_LOOKS). */
+.paper .chip--locked { border-color: var(--ink-muted); color: var(--ink-soft); }
+.paper .chip--open { border-color: var(--ink); color: var(--ink); }
+.paper .chip--learning { background: var(--ink); color: var(--paper); }
+.paper .chip--learning::before { background: var(--red); }
+.paper .chip--landed { background: var(--ink); color: var(--paper); }
+.paper .chip--onlock { border-color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--paper); }
+.paper .chip--combo { border-color: var(--ink); color: var(--ink); }
+.paper .chip--xp { border-color: var(--ink); }
+/* Learning stays red on paper where the app keeps it so (the session screen's status chip): .chip--keep-red. */
+.chip--learning.chip--keep-red, .paper .chip--learning.chip--keep-red { background: var(--red); color: var(--ink); }
+.paper .chip--learning.chip--keep-red::before { background: currentColor; }
+
+/* ================================================================ tape, tag */
+
+/* Segment tape: paper strip 20 high, ink `segmentTape` type, optional mono meta, optional swatch
+   (set --swatch to the segment colour), hard tag shadow, tilt −1° (--r: +1°, --flat: 0). */
+.tape {
+  display: inline-flex;
+  align-items: stretch;
+  height: 20px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--sh-tag);
+  rotate: -1deg;
+  white-space: nowrap;
+  vertical-align: middle;
+  font: 800 15px/1 var(--f-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tape > span:first-child, .tape__text { display: inline-flex; align-items: center; gap: 6px; padding: 1px 7px 0; }
+.tape small, .tape__meta { font: 700 11px/1 var(--f-mono); letter-spacing: 0.02em; color: var(--ink-soft); text-transform: none; }
+.tape--swatch::before {
+  content: '';
+  flex: none;
+  width: 5px;
+  background: var(--swatch, var(--seg-basics));
+  border-right: 1px solid var(--ink);
+}
+.tape--r { rotate: 1deg; }
+.tape--r2 { rotate: -0.6deg; }
+.tape--r3 { rotate: 0.8deg; }
+.tape--flat { rotate: none; }
+.tape--ink { background: var(--ink); color: var(--paper); }
+.tape--ink small, .tape--ink .tape__meta { color: var(--paper-shade); }
+/* A word kicker on a card ("QUEST OF THE DAY"): `chip` type, a touch smaller strip. */
+.tape--word { height: 22px; font-size: 15px; letter-spacing: 0.06em; }
+.tape--lg { height: 30px; font-size: 21px; }
+.tape--lg > span:first-child, .tape--lg .tape__text { padding: 1px 10px 0; }
+
+/* Map tape tag: mono 11 ink on paper, padding 5 × 2.5, optional red dot (the learning tag), −1°, tag shadow. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--sh-tag);
+  rotate: -1deg;
+  font: 700 11px/1 var(--f-mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.tag--dot::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+/* Clip tags: try / almost / landed. */
+.tag--try { background: var(--surface-3); color: var(--paper); }
+.tag--almost { background: var(--yellow); color: var(--ink); }
+
+/* ================================================================ stickers */
+
+/* Die-cut sticker: paper border 2.5, hard shadow, tilted −6° (--alt: +5°). Fill with --sticker. */
+.sticker {
+  --size: 50px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  background: var(--sticker, var(--paper));
+  color: var(--ink);
+  border: calc(var(--size) * 0.05) solid var(--paper);
+  box-shadow: calc(var(--size) * 0.08) calc(var(--size) * 0.1) 0 var(--sh-color);
+  rotate: -6deg;
+}
+.sticker--alt { rotate: 5deg; }
+.sticker--flat { rotate: none; }
+.sticker > .icon { width: 48%; height: 48%; stroke-width: 2; }
+/* Round sticker = a landed node: line-colour disc, paper border (r 10 + 2.5), ink check, sticker shadow. */
+.sticker--node {
+  --size: 25px;
+  border-radius: 50%;
+  border-width: calc(var(--size) * 0.1);
+  box-shadow: calc(var(--size) * 0.08) calc(var(--size) * 0.1) 0 var(--sh-color);
+  background: var(--sticker, var(--seg-flip));
+}
+.sticker--node > svg { width: 100%; height: 100%; }
+/* On lock: the check gives way to an ink core and a paper bullseye; ink keyline + paper ring = the double border. */
+.sticker--onlock {
+  box-shadow:
+    0 0 0 calc(var(--size) * 0.048) var(--ink),
+    0 0 0 calc(var(--size) * 0.096) var(--paper),
+    calc(var(--size) * 0.08) calc(var(--size) * 0.1) 0 calc(var(--size) * 0.096) var(--sh-color);
+}
+.sticker--onlock::before, .sticker--onlock::after { content: ''; position: absolute; border-radius: 50%; }
+.sticker--onlock::before { width: 55%; height: 55%; background: var(--ink); }
+.sticker--onlock::after { width: 20%; height: 20%; background: var(--paper); }
+/* Achievement tiers (50 × 50 square, shadow 4 × 5). Gold: ink keyline 1 at 4; legend: ink keyline + red 1.5 at 6.5. */
+.sticker--bronze { --sticker: var(--tier-bronze); }
+.sticker--silver { --sticker: var(--tier-silver); }
+.sticker--gold { --sticker: var(--tier-gold); }
+.sticker--legend { --sticker: var(--tier-legend); }
+.sticker--gold::before, .sticker--legend::before, .sticker--legend::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.sticker--gold::before, .sticker--legend::before { inset: calc(var(--size) * 0.03); border: max(1px, calc(var(--size) * 0.02)) solid var(--ink); }
+.sticker--legend::after { inset: calc(var(--size) * 0.08); border: max(1px, calc(var(--size) * 0.03)) solid var(--red); }
+.sticker--secret, .sticker--ghost {
+  border: max(2px, calc(var(--size) * 0.04)) dashed var(--ghost, var(--tier-bronze-ghost));
+  box-shadow: none;
+  background: var(--grip);
+  color: var(--ghost, var(--tier-bronze-ghost));
+}
+.sticker--secret { background: var(--surface-2); color: var(--sticker, var(--tier-bronze)); font: 900 calc(var(--size) * 0.52) / 1 var(--f-display); letter-spacing: 0.02em; }
+.sticker--bronze.sticker--ghost, .sticker--bronze.sticker--secret { --ghost: var(--tier-bronze-ghost); }
+.sticker--silver.sticker--ghost, .sticker--silver.sticker--secret { --ghost: var(--tier-silver-ghost); }
+.sticker--gold.sticker--ghost, .sticker--gold.sticker--secret { --ghost: var(--tier-gold-ghost); }
+.sticker--legend.sticker--ghost, .sticker--legend.sticker--secret { --ghost: var(--tier-legend-ghost); }
+.sticker--ghost::before, .sticker--ghost::after, .sticker--secret::before, .sticker--secret::after { content: none; }
+
+/* ================================================================ light and learning (the only two glows) */
+
+/* Light pool: the warm light under landed tricks (DESIGN §3.5: stops 0 → 20 %, 0.5 → 8 %, 1 → 0 of --pool).
+   Size and place it yourself; pools next to each other add up into a cluster glow. Never on anything but grip. */
+.pool {
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 201, 138, 0.2), rgba(255, 201, 138, 0.08) 50%, rgba(255, 201, 138, 0) 100%);
+}
+/* Learning pulse: a red glow growing r 14 → 26 (of a 20 node) while it fades .55 → 0, 1.6 s ease-out, looping.
+   Put .pulse on a positioned wrapper around the node; set --pulse-size to the node's diameter (default 20px).
+   Reduced motion: a static red ring instead. */
+.pulse { position: relative; isolation: isolate; }
+.pulse::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--pulse-size, 20px) * 2.6);
+  height: calc(var(--pulse-size, 20px) * 2.6);
+  margin: calc(var(--pulse-size, 20px) * -1.3);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 69, 36, 1) 30%, rgba(255, 69, 36, 0.5) 62%, rgba(255, 69, 36, 0) 100%);
+  animation: nbd-pulse 1.6s cubic-bezier(.16, 1, .3, 1) infinite;
+  will-change: transform, opacity;
+}
+@keyframes nbd-pulse {
+  from { transform: scale(0.54); opacity: 0.55; }
+  to { transform: scale(1); opacity: 0; }
+}
+.reduced .pulse::before, .pulse--still::before {
+  animation: none;
+  background: none;
+  opacity: 1;
+  transform: none;
+  width: calc(var(--pulse-size, 20px) * 1.5);
+  height: calc(var(--pulse-size, 20px) * 1.5);
+  margin: calc(var(--pulse-size, 20px) * -0.75);
+  border: 1.5px solid var(--red);
+}
+/* Hazard stripes (the learning state's texture): 45°, stripe 2.5 / gap 2.5 in --line. */
+.hazard { background-image: repeating-linear-gradient(-45deg, var(--line, var(--seg-flip)) 0 2.5px, transparent 2.5px 5px); }
+.hazard--soft { background-image: repeating-linear-gradient(-45deg, var(--line-unlit, var(--seg-flip-unlit)) 0 2px, transparent 2px 9px); }
+
+/* ================================================================ stamp */
+
+/* Rubber stamp (DESIGN §8.1): red, double frame (4 + 1.5, 6 apart), `stamp` type, mono date line, −6°,
+   worn ink through a noise mask (the app's Stamp.tsx texture). Decorative: give it role="img" + aria-label,
+   and say the same thing in ink text nearby. Size with --stamp (46 L, 32 M, 22 S). */
+.stamp {
+  --stamp: 46px;
+  --k: calc(var(--stamp) / 46px);
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--stamp) * 0.2) calc(var(--stamp) * 0.4) calc(var(--stamp) * 0.13);
+  border: calc(var(--stamp) * 0.087) solid currentColor;
+  color: var(--red);
+  rotate: -6deg;
+  line-height: 1;
+  white-space: nowrap;
+  -webkit-mask: url('../assets/tex/stamp-wear.png') 0 0 / 360px 360px repeat;
+  mask: url('../assets/tex/stamp-wear.png') 0 0 / 360px 360px repeat;
+}
+.stamp::before {
+  content: '';
+  position: absolute;
+  inset: calc(var(--stamp) * 0.07);
+  border: max(1px, calc(var(--stamp) * 0.0326)) solid currentColor;
+  pointer-events: none;
+}
+.stamp__word {
+  font: 900 var(--stamp) / 0.86 var(--f-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-right: -0.04em;
+}
+.stamp__sub {
+  margin-top: calc(var(--stamp) * 0.1);
+  font: 700 11px/1 var(--f-mono);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-right: -1.5px;
+}
+.stamp--m { --stamp: 32px; }
+.stamp--s { --stamp: 22px; padding-bottom: calc(var(--stamp) * 0.18); }
+.stamp--s .stamp__sub { display: none; }
+.stamp--crisp { -webkit-mask: none; mask: none; }
+
+/* ================================================================ phone frame */
+
+/* An app screen in a phone: dark rounded body, hairline edge, the screen, hard offset shadow — the store
+   screenshots' look. Set --phone-w (default min(78vw, 320px)); everything scales from it.
+   <figure class="phone"><picture class="phone__screen"><source type="image/avif" srcset="…"><img …></picture></figure> */
+.phone {
+  --phone-w: min(78vw, 320px);
+  position: relative;
+  width: var(--phone-w);
+  margin: 0;
+  padding: calc(var(--phone-w) * 0.026);
+  border-radius: calc(var(--phone-w) * 0.105);
+  background: var(--surface-1);
+  border: max(1px, calc(var(--phone-w) * 0.005)) solid var(--hairline);
+  box-shadow: calc(var(--phone-w) * 0.035) calc(var(--phone-w) * 0.035) 0 var(--sh-color);
+}
+.phone__screen, .phone__screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 540 / 1177;
+  border-radius: calc(var(--phone-w) * 0.075);
+}
+.phone__screen { overflow: hidden; background: var(--grip); }
+.paper .phone { --sh-color: var(--ink); }
+
+/* ================================================================ line bullet, segment tile, level badge */
+
+/* Round line bullet: ink code on the line's lit colour (--line), 2 px ink border. 34 (M) / 26 (--s). */
+.bullet {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--line, var(--seg-flip));
+  color: var(--ink);
+  font: 900 18px/1 var(--f-display);
+  letter-spacing: 0.01em;
+  padding-top: 0.08em;
+}
+.bullet--s { width: 26px; height: 26px; border-width: 1.5px; font-size: 14px; }
+.bullet--l { width: 48px; height: 48px; border-width: 2.5px; font-size: 25px; }
+/* Square segment tile: ink code on the segment colour (--line), −1°, card shadow. */
+.seg-tile {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  background: var(--line, var(--seg-flip));
+  color: var(--ink);
+  box-shadow: var(--sh-card);
+  rotate: -1deg;
+  font: 900 22px/1 var(--f-display);
+  padding-top: 0.08em;
+}
+
+/* Level badge: yellow, ink "LVL" + number, −1°, card shadow (46). --l: 72, 2 px ink border, −3°, button shadow. */
+.level-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: var(--sh-card);
+  rotate: -1deg;
+}
+.level-badge > small, .level-badge__label { font: 700 11px/11px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.level-badge > b, .level-badge__num { font: 900 30px/26px var(--f-display); margin-top: 1px; }
+.level-badge--l { width: 72px; height: 72px; border: 2px solid var(--ink); rotate: -3deg; box-shadow: var(--sh-btn); }
+.level-badge--l > small, .level-badge--l .level-badge__label { font-size: 12px; line-height: 12px; letter-spacing: 0.08em; }
+.level-badge--l > b, .level-badge--l .level-badge__num { font-size: 50px; line-height: 42px; }
+/* XP bar: 8 px yellow on surface-3, the slice just gained in paper. On paper: 12 px in an ink frame, the
+   previous fill in ink, the gain in yellow. <div class="xp-bar"><b style="--f:.17"></b><b style="--from:.17; --gain:.12"></b></div>
+   (drive them with transform for animation: scaleX(f) / translateX(from·100%) scaleX(gain)). */
+.xp-bar { position: relative; height: 8px; background: var(--surface-3); overflow: hidden; }
+.xp-bar > b { position: absolute; inset: 0; background: var(--yellow); transform: scaleX(var(--f, 0)); transform-origin: 0 50%; }
+.xp-bar > b + b { background: var(--paper); transform: translateX(calc(var(--from, 0) * 100%)) scaleX(var(--gain, 0)); }
+.paper .xp-bar { height: 12px; background: transparent; border: 1.5px solid var(--ink); }
+.paper .xp-bar > b { background: var(--ink); }
+.paper .xp-bar > b + b { background: var(--yellow); }
+
+/* ================================================================ spectrum (the HUD) */
+
+/* 10 cells (one per segment, dataset order), each the segment's unlit track with a lit fill.
+   Fill a cell with transform: scaleX(0…1) on its <b> (compositor only). */
+.spectrum { display: flex; gap: 3px; height: 12px; align-items: stretch; }
+.spectrum__cell { position: relative; flex: 1 1 0; min-width: 6px; overflow: hidden; background: var(--u); }
+.spectrum__cell > b { position: absolute; inset: 0; background: var(--c); transform: scaleX(0); transform-origin: 0 50%; }
+.spectrum__cell:nth-child(1) { --c: var(--seg-basics); --u: var(--seg-basics-unlit); }
+.spectrum__cell:nth-child(2) { --c: var(--seg-ollie); --u: var(--seg-ollie-unlit); }
+.spectrum__cell:nth-child(3) { --c: var(--seg-shuv); --u: var(--seg-shuv-unlit); }
+.spectrum__cell:nth-child(4) { --c: var(--seg-flip); --u: var(--seg-flip-unlit); }
+.spectrum__cell:nth-child(5) { --c: var(--seg-grind); --u: var(--seg-grind-unlit); }
+.spectrum__cell:nth-child(6) { --c: var(--seg-slide); --u: var(--seg-slide-unlit); }
+.spectrum__cell:nth-child(7) { --c: var(--seg-manual); --u: var(--seg-manual-unlit); }
+.spectrum__cell:nth-child(8) { --c: var(--seg-oldschool); --u: var(--seg-oldschool-unlit); }
+.spectrum__cell:nth-child(9) { --c: var(--seg-transition); --u: var(--seg-transition-unlit); }
+.spectrum__cell:nth-child(10) { --c: var(--seg-grab); --u: var(--seg-grab-unlit); }
+
+/* ================================================================ chrome: top bar */
+
+.skip {
+  position: fixed;
+  z-index: var(--z-overlay);
+  top: calc(var(--safe-t) + 8px);
+  left: var(--gutter);
+  translate: 0 -200%;
+}
+.skip:focus, .skip:focus-visible { translate: none; }
+
+/* The top bar. main.js keeps its state on the bar itself, never on <html>, so a flip restyles the bar and not the
+   document:
+   - data-over="grip|paper": what lies under it (one IntersectionObserver band at the bar's probe line, no per-frame
+     hit test). Over paper the bar turns ink on a paper scrim.
+   - data-up: slid away while the visitor scrolls down; it comes back on the way up and on focus.
+   - data-solid: past the first section. The scrim is solid down to the HUD's bottom edge and then fades over 18 px,
+     so the text the page scrolls under never shows between the wordmark, the nav and the HUD. Over the first
+     section (the poster and the flight over the map) it stays a light scrim. */
+.topbar {
+  --scrim-x: calc(var(--hud-h) - 2px); /* how far below the bar the HUD reaches (phones: the HUD hangs under it) */
+  position: fixed;
+  z-index: var(--z-topbar);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--safe-t) + var(--topbar-h));
+  padding: var(--safe-t) max(var(--gutter), env(safe-area-inset-right, 0px)) 0 max(var(--gutter), env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--paper);
+  pointer-events: none;
+  transition: translate var(--t-slow) var(--ease-standard);
+}
+.topbar > * { pointer-events: auto; }
+/* The scrim: grip fading out under the bar (paper over paper sections). Scrims are the one allowed gradient. */
+.topbar::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 -18px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(15, 15, 14, 0.94) 0%, rgba(15, 15, 14, 0.84) 62%, rgba(15, 15, 14, 0) 100%);
+}
+.topbar[data-solid]::before {
+  bottom: calc(-18px - var(--scrim-x));
+  background: linear-gradient(180deg, var(--grip) 0, var(--grip) calc(100% - 18px), rgba(15, 15, 14, 0) 100%);
+}
+.topbar[data-up] { translate: 0 calc(-100% - 64px); }
+.topbar[data-over='paper'] { color: var(--ink); }
+.topbar[data-over='paper']::before { background: linear-gradient(180deg, rgba(236, 230, 214, 0.96) 0%, rgba(236, 230, 214, 0.88) 62%, rgba(236, 230, 214, 0) 100%); }
+.topbar[data-over='paper'][data-solid]::before { background: linear-gradient(180deg, var(--paper) 0, var(--paper) calc(100% - 18px), rgba(236, 230, 214, 0) 100%); }
+
+/* The wordmark: NBD + the red square dot (the one red of the chrome). 7 px of padding above and below make it a
+   44 px target without moving the letters. */
+.wordmark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.07em;
+  color: inherit;
+  text-decoration: none;
+  font: 900 34px/0.8 var(--f-display);
+  letter-spacing: 0.01em;
+  padding: calc(0.1em + 7px) 0 7px;
+}
+.wordmark__dot, .wordmark > i {
+  flex: none;
+  display: block;
+  width: 0.2em;
+  height: 0.2em;
+  border-radius: 0.035em;
+  background: var(--red);
+  margin-bottom: 0.015em;
+}
+.topbar .wordmark { margin-right: auto; }
+.topbar__soon {
+  font: 500 11px/1.15 var(--f-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.topbar__soon b { font-weight: 700; color: var(--paper); }
+.topbar[data-over='paper'] .topbar__soon { color: var(--ink-soft); }
+.topbar[data-over='paper'] .topbar__soon b { color: var(--ink); }
+/* EN · RU: each link is a 44 × 44 target around a small tag; the negative margins let the boxes overhang the
+   bar's gaps, and the separator keeps the two boxes from overlapping. The page's own language (aria-current,
+   written by the build) is the paper tag. */
+.langs { display: flex; align-items: center; font: 700 12px/1 var(--f-mono); letter-spacing: 0.06em; }
+.langs a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  margin: 0 -6px;
+  color: var(--text-2);
+  text-decoration: none;
+}
+.langs a > span:first-child { padding: 3px 5px 2px; }
+.langs a:hover { color: var(--paper); }
+.langs a[aria-current='page'] { color: var(--ink); }
+.langs a[aria-current='page'] > span:first-child { background: var(--paper); box-shadow: var(--sh-tag); rotate: -1deg; }
+.langs__sep { width: 16px; text-align: center; color: var(--text-muted); }
+.topbar[data-over='paper'] .langs a { color: var(--ink-soft); }
+.topbar[data-over='paper'] .langs a:hover { color: var(--ink); }
+.topbar[data-over='paper'] .langs a[aria-current='page'] { color: var(--paper); }
+.topbar[data-over='paper'] .langs a[aria-current='page'] > span:first-child { background: var(--ink); box-shadow: 2px 2px 0 var(--ink-muted); }
+.topbar[data-over='paper'] .langs__sep { color: var(--ink-muted); }
+/* Sound toggle: a round 40 button (capsule with a label from 600 px) with 2 px of slop all round, so the target
+   is 44 (DESIGN §10). Off = the speaker struck through. Reusable in a section (data-state off|on|loading|
+   unavailable); it takes the paper look inside .paper, and the top bar's own one flips with the bar. */
+.snd {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0 9px;
+  border: 1.5px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--grip);
+  color: var(--paper);
+  font: 800 15px/1 var(--f-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: translate var(--t-instant) var(--ease-standard);
+}
+.snd::before { content: ''; position: absolute; inset: -3.5px; border-radius: inherit; }
+.snd:active { translate: 1px 1px; }
+.snd .icon { width: 19px; height: 19px; }
+.snd__glyph { position: relative; display: block; }
+.snd__glyph::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  background: currentColor;
+  rotate: -45deg;
+  box-shadow: 0 0 0 1.5px var(--grip);
+}
+.snd[data-state='on'] .snd__glyph::after, .snd[data-state='loading'] .snd__glyph::after { display: none; }
+.snd[data-state='on'] { border-color: var(--paper); }
+.snd[data-state='loading'] .icon { animation: snd-wait 0.6s steps(2, jump-none) infinite; }
+.snd[data-state='unavailable'] { color: var(--text-muted); cursor: default; }
+.snd__label { display: none; padding-top: 0.08em; }
+@keyframes snd-wait { 50% { opacity: 0.35; } }
+:is(.topbar[data-over='paper'], .paper) .snd { background: var(--paper); border-color: var(--ink-muted); color: var(--ink); }
+:is(.topbar[data-over='paper'], .paper) .snd[data-state='on'] { border-color: var(--ink); }
+:is(.topbar[data-over='paper'], .paper) .snd[data-state='unavailable'] { color: var(--ink-muted); }
+:is(.topbar[data-over='paper'], .paper) .snd__glyph::after { box-shadow: 0 0 0 1.5px var(--paper); }
+/* "Silent mode mutes it": on an iPhone or iPad the ring/silent switch mutes web audio and no page can tell, so
+   when the visitor turns sound on there, main.js says so for a few seconds under the chrome (a paper tag). */
+.snd-hint {
+  position: fixed;
+  z-index: var(--z-hud);
+  top: calc(var(--safe-t) + var(--topbar-h) + var(--hud-h) + 10px);
+  right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  max-width: calc(100vw - 2 * var(--gutter));
+  padding: 5px 8px 4px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--sh-tag);
+  rotate: -1deg;
+  font: 700 11px/1.25 var(--f-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: opacity var(--t-fast) linear, translate var(--t-base) var(--ease-out);
+}
+.snd-hint--high { top: calc(var(--safe-t) + var(--topbar-h) + 4px); }
+@media (max-width: 899px) {
+  .hud[data-up] ~ .snd-hint:not(.snd-hint--high) { top: calc(var(--safe-t) + var(--hud-h) + 20px); } /* follows the HUD up */
+}
+.snd-hint[hidden] { display: block !important; opacity: 0; translate: 0 -6px; visibility: hidden; transition: opacity var(--t-fast) linear, translate var(--t-base) var(--ease-out), visibility 0s linear var(--t-fast); }
+@media (min-width: 600px) {
+  .topbar { gap: 18px; }
+  .wordmark { font-size: 38px; }
+  .snd { padding: 0 15px 0 12px; }
+  .snd__label { display: block; }
+  .topbar__soon { font-size: 12px; }
+}
+/* A phone on its side: every pixel of height counts, so the solid scrim stops at the bar. */
+@media (max-height: 500px) {
+  .topbar { --scrim-x: 0px; }
+}
+@media (min-width: 900px) {
+  .topbar { --scrim-x: 0px; } /* the HUD sits inside the bar's row */
+  .snd-hint { top: calc(var(--safe-t) + var(--topbar-h) + 8px); }
+}
+@media (max-width: 359px) {
+  .topbar__soon { display: none; }
+}
+
+/* ================================================================ chrome: HUD */
+
+/* The page as a map: LIT % and 10 segment cells fill as the visitor scrolls the story (main.js; LIT is app UI:
+   English on both pages). It is the visitor's progress through the page, not a trick count, so it shows no n/215.
+   - data-off: hidden on the poster (the first screen); it slaps on when the hero's poster rips (data-hud-from).
+   - data-up: moves up into the space of the slid-away top bar.
+   - .is-full: 100 %; .is-hit: the moment it gets there — a paper flash and a −3° bump (DESIGN §8.3, level-up). */
+.hud {
+  position: fixed;
+  z-index: var(--z-hud);
+  top: calc(var(--safe-t) + var(--topbar-h) - 2px);
+  left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--hud-h);
+  padding: 0 9px 0 8px;
+  background: var(--grip);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--sh-tag);
+  color: var(--paper);
+  pointer-events: none;
+  user-select: none;
+  transform-origin: 0 50%;
+  transition: translate var(--t-slow) var(--ease-standard), scale var(--t-base) var(--ease-out), opacity var(--t-fast) linear;
+}
+.hud[data-up] { translate: 0 calc(-1 * var(--topbar-h) + 12px); }
+.hud[data-off] { opacity: 0; scale: 1.18; visibility: hidden; transition: translate var(--t-slow) var(--ease-standard), scale 0s linear var(--t-fast), opacity var(--t-fast) linear, visibility 0s linear var(--t-fast); }
+.hud__lit { display: flex; align-items: baseline; gap: 5px; white-space: nowrap; }
+.hud__lit small { font: 500 11px/1 var(--f-mono); letter-spacing: 0.06em; color: var(--text-2); }
+.hud__lit b { font: 900 19px/1 var(--f-display); min-width: 2.1em; padding-top: 0.08em; font-variant-numeric: tabular-nums; }
+.hud .spectrum { width: 138px; height: 8px; gap: 2px; }
+.hud.is-full { border-color: var(--paper); }
+.hud.is-hit { animation: hud-hit 900ms var(--ease-out) both; }
+@keyframes hud-hit {
+  0% { background-color: var(--paper); rotate: 0deg; }
+  9% { background-color: var(--paper); }
+  10% { background-color: var(--grip); }
+  30% { rotate: -3deg; }
+  100% { background-color: var(--grip); rotate: 0deg; }
+}
+@media (min-width: 900px) {
+  .hud {
+    top: calc(var(--safe-t) + (var(--topbar-h) - var(--hud-h)) / 2);
+    left: 50%;
+    translate: -50% 0;
+    height: 30px;
+    gap: 10px;
+    padding: 0 12px 0 10px;
+    transform-origin: 50% 50%;
+  }
+  .hud[data-up] { translate: -50% 0; }
+  .hud .spectrum { width: 220px; height: 9px; gap: 3px; }
+  .hud__lit b { font-size: 21px; }
+}
+/* Without JavaScript the HUD cannot move and the sound has nothing to play: neither is shown. */
+.no-js .hud, .no-js .snd, .no-js .js-only { display: none; }
+
+/* ================================================================ chrome: footer */
+
+.foot {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  padding-top: clamp(40px, 6vw, 72px);
+  border-top: 1px solid var(--hairline);
+  color: var(--text-2);
+}
+.foot__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 24px; }
+/* Every link carries its "·" in front; the list hangs 22 px to the left and that strip is clipped, so the dot of
+   the first link on each line (the first one, and one that wraps) never shows. */
+.foot__links { display: flex; flex-wrap: wrap; align-items: center; margin-left: -22px; clip-path: inset(-12px -12px -12px 22px); }
+.foot__item { display: inline-flex; align-items: center; white-space: nowrap; }
+.foot__sep { display: inline-block; width: 22px; text-align: center; color: var(--text-muted); }
+.foot a { color: var(--paper); text-decoration: none; }
+/* 44 px tall targets; the underline is a 1.5 px paper rule (3 px on hover) — never red. */
+.foot__links a { display: inline-flex; align-items: center; min-height: 44px; }
+.foot__links a > span { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat; padding-bottom: 3px; }
+.foot__links a:hover > span { background-size: 100% 3px; }
+/* The wordmark as the back cover: poster size, its feet cut off by the end of the page. */
+.foot__end { position: relative; margin-top: clamp(40px, 7vw, 88px); }
+.foot__mark {
+  --mark: clamp(9rem, 52vw, 46rem);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.045em;
+  height: calc(var(--mark) * 0.665); /* ends on the baseline: the wordmark stands on the bottom edge of the page */
+  overflow: hidden;
+  color: var(--paper);
+  font: 900 var(--mark) / 0.8 var(--f-display);
+  letter-spacing: -0.005em;
+  user-select: none;
+}
+.foot__mark > span { display: block; margin-top: -0.035em; }
+.foot__mark > i { display: block; flex: none; align-self: flex-end; width: 0.19em; height: 0.19em; background: var(--red); border-radius: 0.03em; }
+.foot__hand {
+  position: absolute;
+  z-index: 1;
+  right: max(var(--gutter), 5vw);
+  bottom: calc(100% + 6px);
+  color: var(--paper);
+}
+@media (min-width: 900px) {
+  .foot__hand { bottom: auto; top: 8%; right: 4vw; }
+}
+
+/* ================================================================ long reads (support, privacy) */
+
+.doc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: calc(var(--safe-t) + 18px);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+.doc-top nav { display: flex; gap: 4px; }
+.doc-top nav a {
+  display: inline-grid;
+  place-items: center;
+  height: 44px;
+  padding: 0 10px;
+  font: 700 12px/1 var(--f-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  text-decoration: none;
+}
+.doc-top nav a:hover { color: var(--paper); }
+.doc-top nav a[aria-current='page'] { color: var(--ink); }
+.doc-top nav a[aria-current='page'] > span { background: var(--paper); padding: 4px 6px 3px; box-shadow: var(--sh-tag); rotate: -1deg; }
+.doc { max-width: 720px; padding-block: clamp(32px, 6vw, 72px) 24px; }
+.doc h1 { font: 900 clamp(3.5rem, 9vw + 1rem, 6.5rem) / 0.86 var(--f-display); text-transform: uppercase; letter-spacing: 0; margin: 0 0 18px -0.03em; }
+.doc h2 { font: 900 clamp(1.75rem, 1.6vw + 1.4rem, 2.5rem) / 0.95 var(--f-display); text-transform: uppercase; letter-spacing: 0.01em; margin: 52px 0 14px; }
+:where(.doc) :where(p, li) { font: 400 clamp(1rem, 0.2vw + 0.95rem, 1.125rem) / 1.6 var(--f-body); color: var(--text); }
+:where(.doc) p + p { margin-top: 14px; }
+.doc .lead { font-size: clamp(1.1875rem, 0.6vw + 1.05rem, 1.4375rem); line-height: 1.5; }
+.doc .t-mono { color: var(--text-2); margin: -4px 0 26px; }
+.doc ul { padding-left: 0; list-style: none; margin: 14px 0 0; }
+.doc li { position: relative; padding-left: 22px; margin: 10px 0; }
+.doc li::before { content: ''; position: absolute; left: 2px; top: 0.62em; width: 8px; height: 8px; background: var(--paper); rotate: 45deg; }
+.doc strong { font-weight: 600; color: var(--paper); }
+.doc a { color: var(--paper); }
+.doc .card { margin-top: 14px; padding: 18px 20px 20px; }
+.doc .card p:first-child { margin-bottom: 6px; }
+.doc .card p:first-child strong { font: 800 1.375rem/1.05 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
+.doc-foot { padding-block: 40px calc(40px + var(--safe-b)); border-top: 1px solid var(--hairline); margin-top: 56px; color: var(--text-muted); }
+.doc-foot a { color: var(--text-2); }
+
+/* ================================================================ layout */
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--wrap) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.stack { display: flex; flex-direction: column; gap: var(--gap, 16px); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap, 12px); }
+.row--nowrap { flex-wrap: nowrap; }
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Sections. A pinned section is N viewports tall (data-pin="N" → --pin, set before first paint by the page's
+   inline script), measured in svh: the page's height and every scroll length stay put while a phone browser's
+   toolbar slides in and out. Its .pin stage sticks for that whole range and is as tall as the screen shows right
+   now (dvh). In iOS Safari the bottom toolbar collapses as the visitor scrolls down and the screen grows by ~80 pt:
+   a 100svh stage then stops short of the bottom edge (a band of nothing under the map), and a 100lvh one hides its
+   bottom-anchored captions under the toolbar while it is out. A dvh stage does neither; Safari changes dvh once
+   the toolbar has settled (one relayout, the canvases in the stage get one resize), not on every frame. It never
+   outgrows its section (max-height), and it paints its own grip and grain, so the texture stands still with it. */
+main { display: block; position: relative; }
+.s { position: relative; overflow-x: clip; }
+[data-pin] { height: calc(var(--pin, 1) * 100vh); height: calc(var(--pin, 1) * 100svh); }
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100%;
+  overflow: hidden;
+  overflow: clip;
+  background: url('../assets/tex/grain-grip.png') 0 0 / 256px 256px repeat, var(--grip);
+}
+/* Without JavaScript a pinned section is one still frame. */
+.no-js [data-pin] { height: auto; }
+.no-js .pin { position: relative; min-height: 100svh; height: auto; }
+/* Room for the fixed chrome at the top of a section's content. */
+.s-pad-top { padding-top: calc(var(--safe-t) + var(--topbar-h) + var(--hud-h) + 20px); }
+
+/* ================================================================ reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar, .hud, .hud[data-off], .btn, .snd, .snd-hint, .snd-hint[hidden] { transition-duration: 0.01ms; transition-delay: 0s; }
+  .hud.is-hit { animation: none; }
+  .pulse::before {
+    animation: none;
+    background: none;
+    opacity: 1;
+    transform: none;
+    width: calc(var(--pulse-size, 20px) * 1.5);
+    height: calc(var(--pulse-size, 20px) * 1.5);
+    margin: calc(var(--pulse-size, 20px) * -0.75);
+    border: 1.5px solid var(--red);
+  }
+}
