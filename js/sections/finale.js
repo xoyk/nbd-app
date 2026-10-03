@@ -96,6 +96,7 @@ export default async function init(root, ctx) {
   const lines = $$('.finale__ln');
   const dot = $('.finale__dot');
   const soon = $('.finale__soon');
+  const beta = $('.finale__beta'); // BETA IS OPEN: the stamp under the sticker, the TestFlight link
   const shareBtn = $('[data-fin-share]');
   const shareLabel = $('[data-fin-share-label]');
   const linkLine = $('[data-fin-link]');
@@ -209,7 +210,7 @@ export default async function init(root, ctx) {
   /** The end's words, cut-outs and button as boxes in stage px (laid out even while they wait, transparent). */
   function wordBoxes() {
     const s = stage.getBoundingClientRect();
-    const els = [...root.querySelectorAll('.finale__w, .finale__soon, .finale__share, .finale__hand-in, .finale__note')];
+    const els = [...root.querySelectorAll('.finale__w, .finale__soon, .finale__beta, .finale__share, .finale__hand-in, .finale__note')];
     return els
       .map((el) => el.getBoundingClientRect())
       .filter((r) => r.width > 0 && r.height > 0)
@@ -422,7 +423,7 @@ export default async function init(root, ctx) {
   let endOn = false;
   let endTimers = [];
   const later = (ms, fn) => endTimers.push(setTimeout(fn, ms));
-  const endParts = [...lines, dot, soon, shareBtn, hand, note].filter(Boolean);
+  const endParts = [...lines, dot, soon, beta, shareBtn, hand, note].filter(Boolean);
   function showEnd(on) {
     if (on === endOn) return;
     endOn = on;
@@ -465,12 +466,23 @@ export default async function init(root, ctx) {
       soon.classList.add('is-on');
       motion.animate(soon, (v) => ({ transform: `scale(${(1.25 - 0.25 * v).toFixed(4)}) rotate(${(-3 * (1 - v)).toFixed(2)}deg)` }), { spring: 'pop', fill: 'none' });
     });
-    later(tDot + 470, () => {
+    // The beta stamp hits under the sticker: in hard (1.5 → 1, ease-in, like the LANDED stamp) with the stamp's thud.
+    later(tDot + 430, () => {
+      if (!beta) return;
+      beta.classList.add('is-on');
+      motion.animate(beta, [{ transform: 'scale(1.5)' }, { transform: 'scale(0.985)', offset: 0.7 }, { transform: 'none' }], {
+        duration: 200,
+        easing: 'in',
+        fill: 'none',
+      });
+      sound.play('stamp');
+    });
+    later(tDot + 600, () => {
       shareBtn.classList.add('is-on');
       motion.animate(shareBtn, (v) => ({ transform: `translate3d(0, ${(10 * (1 - v)).toFixed(2)}px, 0)` }), { spring: 'settle', fill: 'none' });
     });
-    later(tDot + 640, () => hand.classList.add('is-on'));
-    later(tDot + 760, () => note.classList.add('is-on'));
+    later(tDot + 760, () => hand.classList.add('is-on'));
+    later(tDot + 880, () => note.classList.add('is-on'));
   }
 
   // ---------------------------------------------------------------- send it to the crew

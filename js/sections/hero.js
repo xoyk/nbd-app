@@ -61,6 +61,7 @@ export default async function init(root, ctx) {
   const sub = $('.hero__sub');
   const foot = $('.hero__foot');
   const cta = $('.hero__cta');
+  const beta = $('.hero__beta'); // the BETA IS OPEN stamp under the sticker: goes down with it on the rip
   const drop = $('.hero__drop');
   const beacon = $('.hero__beacon');
   const probe = $('.hero__probe');
@@ -319,6 +320,8 @@ export default async function init(root, ctx) {
     sub.style.opacity = ks ? (1 - ks).toFixed(3) : '';
     const kc = flung(clamp((q - 0.01) / 0.12));
     cta.style.transform = kc ? tf(-W * 0.08 * kc, H * 1.05 * kc, -16 * kc) : '';
+    const kb = flung(clamp((q - 0.02) / 0.12));
+    if (beta) beta.style.transform = kb ? tf(-W * 0.03 * kb, H * 1.1 * kb, -9 * kb) : '';
     drop.style.opacity = q > 0 ? clamp(1 - q / 0.03).toFixed(3) : '';
   }
 
