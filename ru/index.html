@@ -37,7 +37,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-  <link rel="stylesheet" href="../css/site.css?v=5140451769">
+  <link rel="stylesheet" href="../css/site.css?v=6d35459fce">
   <link rel="preload" href="../assets/fonts/sofia-900.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/onest-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/data/map.json" as="fetch" crossorigin>
@@ -573,6 +573,175 @@
 </section>
 
 <!-- ▲ session -->
+<!-- ▼ library -->
+<section class="s s-library" id="library" data-section="library" data-pin="2.8" aria-labelledby="library-title">
+  <!-- library — "Every try on tape." The app's clips as a library of your own tricks (docs/site/library-facts.md).
+       One pinned stage; the scroll is the thumb on the player's scrubber. Three cuts of one Kickflip battle (14.09
+       attempt → 27.09 almost → today, the make), then the app's add-clip sheet, paper, slides up over the player for
+       "Which trick?" (every trick on a reel, the app's own search) and carries on up off the top as the Clips tab,
+       filed, on grip, rises behind it: scrolling forward everything travels up, and back it all comes down again
+       (library.js; the script clones the column onto the sheet). Every piece of footage is drawn by js/lib/board.js.
+       Everything inside the recreations is the app's English on both pages (lang="en"). Without the script this is
+       one still: the make at frame 52 / 120 and the filed tab. -->
+  <div class="pin lib" data-stage data-phase="a">
+
+    <!-- The words: the head on a phone (it slides off as the player takes the screen), the left column on a desktop. -->
+    <div class="lib-col">
+      <header class="lib-head" data-head>
+        <p class="lib-kicker"><span>Клипы · библиотека трюков</span></p>
+        <h2 class="lib-title t-poster" id="library-title"><span class="lib-title__l">Каждая</span> <span class="lib-title__l">попытка —</span> <span class="lib-title__l">на <span class="lib-film">плёнке.</span></span></h2>
+        <p class="lib-lede">Из клипов в NBD складывается библиотека твоих трюков: каждый клип лежит у своего трюка, с тегом — что на нём.</p>
+      </header>
+      <p class="lib-honest" data-honest><b>Видео нарисованное, клипы выдуманные.</b> <span class="lib-honest__more">Плеер и вкладка <span lang="en">Clips</span> — как в приложении. Клипы остаются в телефоне, до 60 секунд каждый.</span></p>
+      <ol class="lib-beats list-reset" role="list" data-beats>
+        <li class="lib-beat is-on" data-beat="a"><span class="lib-beat__n" aria-hidden="true">01</span><p class="lib-beat__t"><b>По кадрам.</b> <span class="lib-beat__long">Замедли до <code lang="en">0.25×</code> и листай по одному кадру. Свайп вбок — другой клип того же трюка, попытка за попыткой.</span><span class="lib-beat__short" aria-hidden="true">Замедли до <code lang="en">0.25×</code> и листай по одному кадру.</span></p></li>
+        <li class="lib-beat" data-beat="b"><span class="lib-beat__n" aria-hidden="true">02</span><p class="lib-beat__t"><b>Любой трюк. Любой клип.</b> <span class="lib-beat__long">Все 216 трюков, в каждой из их стоек. Найди нужный по названию и отметь, что на клипе: <span class="lib-ktag" lang="en">attempt</span> <span class="lib-ktag lib-ktag--almost" lang="en">almost</span> <span class="lib-ktag lib-ktag--landed" lang="en">landed</span>. Клип, где трюк зашёл, — это пруф: +25% к XP трюка, за Kickflip в своей стойке <span class="nowrap">+30</span>.</span><span class="lib-beat__short" aria-hidden="true">Все 216, в каждой из их стоек. <span class="nowrap">Клип-пруф:</span> <span class="nowrap">+30</span> за Kickflip в своей стойке.</span></p></li>
+        <li class="lib-beat" data-beat="c"><span class="lib-beat__n" aria-hidden="true">03</span><p class="lib-beat__t"><b>Раскладывается само.</b> <span class="lib-beat__long">Сними попытку или возьми видео из галереи, отметь, какой это трюк, — и клип ляжет на его полку. У каждого трюка свой ряд, свежие первыми: через пару недель в ряду Kickflip вся битва целиком.</span><span class="lib-beat__short" aria-hidden="true">Отметь трюк — и клип ляжет в его ряд, свежие первыми.</span></p></li>
+      </ol>
+    </div>
+
+    <!-- ============ the battle: the app's clip player (src/features/clips/ClipPlayerScreen.tsx) and, under it, the
+         Kickflip group of the Clips tab as it stood that day -->
+    <div class="lib-rail" data-rail>
+      <figure class="lib-player" data-player role="group" aria-label="Плеер клипов из приложения: Kickflip, своя стойка, 2 октября, клип 1 из 5, тег «поставлен». Скорость — четверть, кадр 52 из 120: флик. Видео нарисованное: только доска, без райдера.">
+        <div class="lib-video" data-video>
+          <i class="lib-video__floor" data-floor aria-hidden="true"></i>
+          <p class="lib-date" data-date aria-hidden="true"><span data-date-t data-today-dm>02.10</span></p>
+          <canvas class="lib-video__cv" data-cv aria-hidden="true"></canvas>
+          <!-- still --><noscript><img class="lib-still" src="../assets/img/library-still.webp?v=8b0fa67360" width="800" height="420" alt="" loading="lazy" decoding="async"><svg class="lib-still" viewBox="0 0 800 420" preserveAspectRatio="xMidYMax meet" aria-hidden="true" focusable="false"><path class="lib-still__arrow" d="M459.2 293.7Q435.1 293.7 430.8 257.7M426.7 267.9L430.8 257.7L437.2 266.6"/><g class="lib-still__note" transform="rotate(-6 465.2 293.7)"><text x="465.2" y="305.7" dx="3" dy="3" class="lib-still__shadow">вот он, флик</text><text x="465.2" y="305.7">вот он, флик</text></g></svg></noscript><!-- /still -->
+          <div class="lib-top" aria-hidden="true" lang="en">
+            <p class="lib-top__name">Kickflip</p>
+            <p class="lib-top__meta" data-meta>Normal · <span data-today-dmy>02.10.26</span> · clip 1 of 5</p>
+          </div>
+          <span class="lib-speedtape" data-speedtape aria-hidden="true" lang="en">0.25×</span>
+          <div class="lib-hand" data-hand aria-hidden="true"><svg class="lib-hand__arrow" data-hand-arrow width="1" height="1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d=""/></svg><span class="t-hand" lang="ru">вот он, флик</span></div>
+          <button class="lib-video__tap js-only" type="button" data-tap aria-label="Play or pause" lang="en"></button>
+        </div>
+
+        <div class="lib-panel" lang="en">
+          <div class="lib-scrub" data-scrub role="slider" tabindex="0" aria-label="Frame scrubber" aria-valuemin="1" aria-valuemax="120" aria-valuenow="52" aria-valuetext="frame 52 / 120">
+            <canvas class="lib-scrub__cv" data-strip aria-hidden="true"></canvas>
+            <i class="lib-scrub__head" data-head-mark aria-hidden="true"></i>
+          </div>
+          <div class="lib-time" aria-hidden="true">
+            <b data-cur>0:01.70</b>
+            <span data-frame>frame 52 / 120</span>
+            <b class="lib-time__len" data-len>0:04.00</b>
+          </div>
+          <div class="lib-transport">
+            <button class="lib-rbtn js-only" type="button" data-step="-1" aria-label="Previous frame"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 6v12"/><path d="M18 6.5v11l-8-5.5z"/></svg></button>
+            <button class="lib-play js-only" type="button" data-play aria-label="Play" aria-pressed="false"><svg class="icon lib-play__i lib-play__i--play" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg><svg class="icon lib-play__i lib-play__i--pause" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5v14"/><path d="M16 5v14"/></svg></button>
+            <button class="lib-rbtn js-only" type="button" data-step="1" aria-label="Next frame"><svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 6v12"/><path d="M6 6.5v11l8-5.5z"/></svg></button>
+            <div class="lib-seg lib-speed" role="radiogroup" aria-label="Speed">
+              <button type="button" role="radio" aria-checked="false" data-speed="1" disabled>1×</button>
+              <button type="button" role="radio" aria-checked="false" data-speed="0.5" disabled>0.5×</button>
+              <button type="button" role="radio" aria-checked="true" data-speed="0.25" disabled>0.25×</button>
+            </div>
+            <div class="lib-tagrow" aria-hidden="true">
+              <p class="lib-taglabel">what’s on the clip</p>
+              <div class="lib-seg lib-tags" data-tags><span data-k="attempt">attempt</span><span data-k="almost">almost</span><span data-k="landed" class="is-on">landed</span></div>
+            </div>
+          </div>
+        </div>
+      </figure>
+
+      <!-- Kickflip's group in the Clips tab, as it stood on the day on screen: tiles newest first, rows of four. -->
+      <div class="lib-strip" data-strip-group aria-hidden="true" lang="en">
+        <p class="lib-group__h"><span class="bullet bullet--s" style="--line: #FE429D">K1</span><span class="lib-group__name">Kickflip</span><span class="chip chip--landed" data-chip>landed</span><span class="lib-group__n"><span data-n>5 clips</span><svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span></p>
+        <div class="lib-tiles" data-tiles>
+          <div class="lib-tile is-landed" data-clip="k-today"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:04</span><span class="lib-tile__tag" data-k="landed">landed</span></div><p class="lib-tile__cap"><span data-today-dm>02.10</span> Normal</p></div>
+          <div class="lib-tile" data-clip="k-2709"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:03</span><span class="lib-tile__tag" data-k="almost">almost</span></div><p class="lib-tile__cap">27.09 Normal</p></div>
+          <div class="lib-tile" data-clip="k-2409"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:05</span><span class="lib-tile__tag" data-k="almost">almost</span></div><p class="lib-tile__cap">24.09 Normal</p></div>
+          <div class="lib-tile" data-clip="k-2109"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:06</span><span class="lib-tile__tag" data-k="attempt">attempt</span></div><p class="lib-tile__cap">21.09 Normal</p></div>
+          <div class="lib-tile" data-clip="k-1409"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:04</span><span class="lib-tile__tag" data-k="attempt">attempt</span></div><p class="lib-tile__cap">14.09 Normal</p></div>
+          <div class="lib-tile lib-tile--film"><div class="lib-tile__box"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg><b>Film</b></div><p class="lib-tile__cap">from gallery</p></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lib-toast js-only" data-toast lang="en" aria-hidden="true">Clip’s in <span aria-hidden="true">·</span> <b>+30 XP</b></p>
+
+    <!-- ============ "Which trick?": the add-clip sheet, paper, sliding up over the player. Every name on a reel in
+         poster type, the app's own search (src/features/search/model.ts) over them, the stances the trick has. Built
+         by the script. -->
+    <div class="lib-reel paper js-only" data-reel data-surface="paper" inert>
+      <div class="lib-reel__in">
+        <p class="lib-reel__h" lang="en" aria-hidden="true">Which trick?</p>
+        <label class="lib-search">
+          <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.5 10.5a6 6 0 1 0 12 0a6 6 0 1 0 -12 0"/><path d="M15 15l5.5 5.5"/></svg>
+          <span class="sr-only">Найти трюк среди всех 216</span>
+          <input class="lib-search__in" data-q type="search" placeholder="Find a trick" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <i class="lib-search__caret" data-caret aria-hidden="true"></i>
+          <b class="lib-search__n" data-q-n aria-hidden="true">216</b>
+        </label>
+        <div class="lib-chips" aria-hidden="true" lang="en"><div class="lib-chips__row" data-chips></div></div>
+        <div class="lib-drum" data-drum role="img" aria-label="Выбор трюка: барабан на 216 трюков остановился на Kickflip.">
+          <i class="lib-drum__frame" data-drum-frame aria-hidden="true"></i>
+          <canvas class="lib-drum__cv" data-drum-cv aria-hidden="true"></canvas>
+          <span class="lib-drum__chip" data-drum-chip aria-hidden="true" lang="en"></span>
+        </div>
+        <div class="lib-stances" data-stances aria-hidden="true" lang="en">
+          <p class="lib-stances__k">stance</p>
+          <div class="lib-stances__row" data-stance-row></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ the Clips tab (src/features/clips/ClipsScreen.tsx), filed: 10 clips · 4 tricks, newest first. Its
+         text equivalent sits outside it, so it is there for assistive tech at every point of the scroll (the tab
+         itself is hidden and inert outside its beat); the picture is aria-hidden, like the battle's strip. -->
+    <p class="sr-only" data-shelf-label>Вкладка Clips из приложения, клипы выдуманные: 10 клипов, 4 трюка, свежие первыми. Kickflip, поставлен: зашёл 2 октября, «почти» — 27 и 24 сентября, попытки — 21 и 14 сентября. Ollie, железно: попытка в Fakie 27 сентября и клип, где трюк зашёл, от 2 июня. BS 50-50, поставлен: зашёл 14 сентября, «почти» — 11 сентября. Pop Shuvit, поставлен: зашёл 23 августа.</p>
+    <div class="lib-shelf" data-shelf aria-hidden="true">
+      <div class="lib-shelf__in" data-shelf-in lang="en">
+        <div class="lib-shelf__title">
+          <p class="lib-shelf__h">Clips</p>
+          <div class="lib-shelf__meta"><p>10 clips · 4 tricks</p><p class="lib-shelf__sort">newest <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 9l7 7 7-7"/></svg></p></div>
+        </div>
+        <div class="lib-filters"><span class="lib-fchip is-on">all</span><span class="lib-fchip">landed <small>4</small></span><span class="lib-fchip">almost <small>3</small></span><span class="lib-fchip">tries <small>3</small></span></div>
+        <div class="lib-groups">
+          <div class="lib-group lib-group--wide" data-group="kickflip">
+            <p class="lib-group__h"><span class="bullet bullet--s" style="--line: #FE429D">K1</span><span class="lib-group__name">Kickflip</span><span class="chip chip--landed">landed</span><span class="lib-group__n">5 clips<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span></p>
+            <div class="lib-tiles">
+              <div class="lib-tile is-landed" data-clip="k-today"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:04</span><span class="lib-tile__tag" data-k="landed">landed</span></div><p class="lib-tile__cap"><span data-today-dm>02.10</span> Normal</p></div>
+              <div class="lib-tile" data-clip="k-2709"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:03</span><span class="lib-tile__tag" data-k="almost">almost</span></div><p class="lib-tile__cap">27.09 Normal</p></div>
+              <div class="lib-tile" data-clip="k-2409"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:05</span><span class="lib-tile__tag" data-k="almost">almost</span></div><p class="lib-tile__cap">24.09 Normal</p></div>
+              <div class="lib-tile" data-clip="k-2109"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:06</span><span class="lib-tile__tag" data-k="attempt">attempt</span></div><p class="lib-tile__cap">21.09 Normal</p></div>
+              <div class="lib-tile" data-clip="k-1409"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:04</span><span class="lib-tile__tag" data-k="attempt">attempt</span></div><p class="lib-tile__cap">14.09 Normal</p></div>
+              <div class="lib-tile lib-tile--film"><div class="lib-tile__box"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg><b>Film</b></div><p class="lib-tile__cap">from gallery</p></div>
+            </div>
+          </div>
+          <div class="lib-group" data-group="ollie">
+            <p class="lib-group__h"><span class="bullet bullet--s" style="--line: #FBA01D">O1</span><span class="lib-group__name">Ollie</span><span class="chip chip--onlock">on lock</span><span class="lib-group__n">2 clips<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span></p>
+            <div class="lib-tiles">
+              <div class="lib-tile" data-clip="o-2709"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:05</span><span class="lib-tile__tag" data-k="attempt">attempt</span></div><p class="lib-tile__cap">27.09 Fakie</p></div>
+              <div class="lib-tile is-landed" data-clip="o-0206"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:03</span><span class="lib-tile__tag" data-k="landed">landed</span></div><p class="lib-tile__cap">02.06 Normal</p></div>
+              <div class="lib-tile lib-tile--film"><div class="lib-tile__box"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg><b>Film</b></div><p class="lib-tile__cap">from gallery</p></div>
+            </div>
+          </div>
+          <div class="lib-group" data-group="bs-50-50">
+            <p class="lib-group__h"><span class="bullet bullet--s" style="--line: #3CE074">G2</span><span class="lib-group__name">BS 50-50</span><span class="chip chip--landed">landed</span><span class="lib-group__n">2 clips<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span></p>
+            <div class="lib-tiles">
+              <div class="lib-tile is-landed" data-clip="g-1409"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:08</span><span class="lib-tile__tag" data-k="landed">landed</span></div><p class="lib-tile__cap">14.09 Normal</p></div>
+              <div class="lib-tile" data-clip="g-1109"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:11</span><span class="lib-tile__tag" data-k="almost">almost</span></div><p class="lib-tile__cap">11.09 Normal</p></div>
+              <div class="lib-tile lib-tile--film"><div class="lib-tile__box"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg><b>Film</b></div><p class="lib-tile__cap">from gallery</p></div>
+            </div>
+          </div>
+          <div class="lib-group" data-group="pop-shuvit">
+            <p class="lib-group__h"><span class="bullet bullet--s" style="--line: #28D3F4">S1</span><span class="lib-group__name">Pop Shuvit</span><span class="chip chip--landed">landed</span><span class="lib-group__n">1 clip<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M9 5l7 7-7 7"/></svg></span></p>
+            <div class="lib-tiles">
+              <div class="lib-tile is-landed" data-clip="s-2308"><div class="lib-tile__box"><canvas class="lib-tile__cv"></canvas><span class="lib-tile__play"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" focusable="false"><path d="M8.5 6v12l9.5-6z"/></svg></span><span class="lib-tile__len">0:05</span><span class="lib-tile__tag" data-k="landed">landed</span></div><p class="lib-tile__cap">23.08 Normal</p></div>
+              <div class="lib-tile lib-tile--film"><div class="lib-tile__box"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg><b>Film</b></div><p class="lib-tile__cap">from gallery</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sr-only" aria-live="polite" data-live></p>
+  </div>
+</section>
+
+<!-- ▲ library -->
 <!-- ▼ plan -->
 <section class="s s-plan" id="plan" data-section="plan" aria-labelledby="plan-title">
 
@@ -933,7 +1102,7 @@
   <script>
     window.NBD_LANG = 'ru';
     window.NBD_BASE = '../';
-    window.NBD_I18N = {"finale":{"shareTitle":"NBD. — карта всех трюков на скейте","copied":"Ссылка скопирована","copiedLive":"Ссылка скопирована. Кидай в чат своим.","copyByHand":"Скопируй ссылку:"},"hero":{"state":{"locked":"locked","available":"open","learning":"learning","landed":"landed","onLock":"on lock"},"buildsOn":{"one":"стоит на {n} трюке","few":"стоит на {n} трюках","many":"стоит на {n} трюках","other":"стоит на {n} трюка"},"root":"отсюда начинаются все линии"},"landed":{"hint":"Держи, пока не заполнится полоска","after":"Зашёл. Подержи ещё раз — повторим","mapLabelLanded":"Карта трюков вокруг Kickflip. Kickflip зашёл, вокруг открылось 14 трюков.","addClip":"В приложении здесь камера: снимаешь, как зашёл трюк, или берёшь видео из галереи.","share":"В приложении так уходит карточка с печатью. А здесь — ссылка на эту страницу.","copied":"Ссылка скопирована. В приложении ушла бы карточка с печатью.","shareTitle":"NBD. — карта всех трюков на скейте","announce":"Kickflip зашёл. Плюс 160 XP. Открылось 14 трюков.","stampA11y":"Landed, {date}, normal"},"plan":{"swapA11y":"Заменить квест: {title}","swapped":"Квест заменён: {title}. Замена на эту неделю потрачена.","swapUsed":"Замена на эту неделю потрачена","paused":"Серия на паузе. Остаётся 1 неделя.","resumed":"Серия снова идёт."},"session":{"kicker":"Kickflip · поставлен · следующая катка","hand":{"idle":"этот зайдёт","first":"первый зашёл","streak":"пошло","top":"прёт","broke":"без драмы"},"live":{"make":"Есть. Подряд: {run}. Зашло {makes} из {tries}.","miss":"Мимо. Подряд снова 0. Зашло {makes} из {tries}.","day":"Есть. Подряд: {run}. Зашло {makes} из {tries}. Kickflip — плюс день: 2 из 3 до «железно»."},"soundOn":"Звук включён. Выключить","soundOff":"Звук выключен. Включить"},"site":{"sound":"Звук","soundUnavailable":"В этом браузере звук недоступен","soundNone":"Без звука","soundSilent":"Бесшумный режим глушит звук","shareTitle":"NBD. — карта всех трюков на скейте"},"states":{},"stickers":{"tier":{"bronze":"бронза","silver":"серебро","gold":"золото","legend":"легенда"},"kicker":"{tier}","secretKicker":"секретная · {tier}","secretBody":"Секретная. Условие не показываем — откроется сама, когда случится.","srEarned":"{tier}, +{xp} XP. {description}","srSecret":"Секретная ачивка, {tier}, +{xp} XP. Условие не показываем — откроется сама, когда случится."},"yours":{"trick":"trick","tricks":"tricks","chip":"{trick}, линия {code}","lit":"{trick} горит, и всё, на чём он стоит, тоже. На карте {total} из 216.","off":"{trick} больше не на карте. На ней {total} из 216.","reset":"Карта снова тёмная."}};
+    window.NBD_I18N = {"finale":{"shareTitle":"NBD. — карта всех трюков на скейте","copied":"Ссылка скопирована","copiedLive":"Ссылка скопирована. Кидай в чат своим.","copyByHand":"Скопируй ссылку:"},"hero":{"state":{"locked":"locked","available":"open","learning":"learning","landed":"landed","onLock":"on lock"},"buildsOn":{"one":"стоит на {n} трюке","few":"стоит на {n} трюках","many":"стоит на {n} трюках","other":"стоит на {n} трюка"},"root":"отсюда начинаются все линии"},"landed":{"hint":"Держи, пока не заполнится полоска","after":"Зашёл. Подержи ещё раз — повторим","mapLabelLanded":"Карта трюков вокруг Kickflip. Kickflip зашёл, вокруг открылось 14 трюков.","addClip":"В приложении здесь камера: снимаешь, как зашёл трюк, или берёшь видео из галереи.","share":"В приложении так уходит карточка с печатью. А здесь — ссылка на эту страницу.","copied":"Ссылка скопирована. В приложении ушла бы карточка с печатью.","shareTitle":"NBD. — карта всех трюков на скейте","announce":"Kickflip зашёл. Плюс 160 XP. Открылось 14 трюков.","stampA11y":"Landed, {date}, normal"},"library":{"player":{"a":"Плеер клипов из приложения: Kickflip, своя стойка, 14 сентября, тег «попытка». Доска не докручивается и падает гриптейпом вниз. Видео нарисованное: только доска, без райдера.","b":"Плеер клипов из приложения: Kickflip, своя стойка, 27 сентября, клип 1 из 4, тег «почти». Доска делает полный оборот и встаёт на ребро. Видео нарисованное: только доска, без райдера.","c":"Плеер клипов из приложения: Kickflip, своя стойка, сегодня, тег «поставлен». Полный оборот, все четыре колеса на земле. Видео нарисованное: только доска, без райдера."},"proof":"Клип с Kickflip на месте, это пруф. Плюс 30 XP.","shelf":"Вкладка Clips из приложения, клипы выдуманные: 10 клипов, 4 трюка, свежие первыми. Kickflip, поставлен: зашёл сегодня, «почти» — 27 и 24 сентября, попытки — 21 и 14 сентября. Ollie, железно: попытка в Fakie 27 сентября и клип, где трюк зашёл, от 2 июня. BS 50-50, поставлен: зашёл 14 сентября, «почти» — 11 сентября. Pop Shuvit, поставлен: зашёл 23 августа.","search":{"zero":"Какой трюк? Поиск: {q}. На карте такого нет.","zeroNative":"Какой трюк? Поиск: {q}. Такого нет: названия трюков в приложении английские, например Kickflip.","single":"Какой трюк? Поиск: {q}. Один трюк: {a}.","pair":"Какой трюк? Поиск: {q}. Найдено {n}: {a}, {b}.","trio":"Какой трюк? Поиск: {q}. Найдено {n}: {a}, {b}, {c}.","more":"Какой трюк? Поиск: {q}. Найдено {n}: {a}, {b}, {c} и другие.","hint":"Названия трюков в приложении английские: попробуй Kickflip."},"spin":"Какой трюк? Все 216 трюков на барабане.","reel":"Какой трюк? Все 216 трюков. Барабан остановился на {name}."},"plan":{"swapA11y":"Заменить квест: {title}","swapped":"Квест заменён: {title}. Замена на эту неделю потрачена.","swapUsed":"Замена на эту неделю потрачена","paused":"Серия на паузе. Остаётся 1 неделя.","resumed":"Серия снова идёт."},"session":{"kicker":"Kickflip · поставлен · следующая катка","hand":{"idle":"этот зайдёт","first":"первый зашёл","streak":"пошло","top":"прёт","broke":"без драмы"},"live":{"make":"Есть. Подряд: {run}. Зашло {makes} из {tries}.","miss":"Мимо. Подряд снова 0. Зашло {makes} из {tries}.","day":"Есть. Подряд: {run}. Зашло {makes} из {tries}. Kickflip — плюс день: 2 из 3 до «железно»."},"soundOn":"Звук включён. Выключить","soundOff":"Звук выключен. Включить"},"site":{"sound":"Звук","soundUnavailable":"В этом браузере звук недоступен","soundNone":"Без звука","soundSilent":"Бесшумный режим глушит звук","shareTitle":"NBD. — карта всех трюков на скейте"},"states":{},"stickers":{"tier":{"bronze":"бронза","silver":"серебро","gold":"золото","legend":"легенда"},"kicker":"{tier}","secretKicker":"секретная · {tier}","secretBody":"Секретная. Условие не показываем — откроется сама, когда случится.","srEarned":"{tier}, +{xp} XP. {description}","srSecret":"Секретная ачивка, {tier}, +{xp} XP. Условие не показываем — откроется сама, когда случится."},"yours":{"trick":"trick","tricks":"tricks","chip":"{trick}, линия {code}","lit":"{trick} горит, и всё, на чём он стоит, тоже. На карте {total} из 216.","off":"{trick} больше не на карте. На ней {total} из 216.","reset":"Карта снова тёмная."}};
     // Pinned sections take their height before the first paint (data-pin="4.2" → --pin: 4.2).
     document.querySelectorAll('[data-pin]').forEach(function (s) { s.style.setProperty('--pin', s.getAttribute('data-pin')); });
   </script>

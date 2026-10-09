@@ -417,8 +417,13 @@ export default async function init(root, ctx) {
     timers = [];
   };
 
+  /** The visitor's date, never before 2 October 2026: the stamp's markup and the real screenshot say 02.10.26, and the
+   *  library's clips follow the same rule (library-clips.js todayStrings), so the stamp and today's clip always agree.
+   *  It is the library's rule repeated, not imported: importing it would load the board engine with this section. */
   function todayStrings() {
-    const now = new Date();
+    const floor = new Date(2026, 9, 2);
+    const clock = new Date();
+    const now = clock < floor ? floor : clock;
     const dd = String(now.getDate()).padStart(2, '0');
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const yy = String(now.getFullYear()).slice(-2);
