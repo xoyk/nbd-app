@@ -896,6 +896,7 @@ a:hover { text-decoration-thickness: 3px; }
   white-space: nowrap;
 }
 .topbar__soon b { font-weight: 700; color: var(--paper); }
+a.topbar__soon { text-decoration: none; }
 .topbar[data-over='paper'] .topbar__soon { color: var(--ink-soft); }
 .topbar[data-over='paper'] .topbar__soon b { color: var(--ink); }
 /* EN · RU: each link is a 44 × 44 target around a small tag; the negative margins let the boxes overhang the

@@ -9,7 +9,7 @@
 // (phone: the whole city as wide as the screen, centred in the room; desktop: the whole city in the middle). Then the
 // end slams in: the camera makes room for the words (phone: the city rises; desktop: it steps aside to the right), the
 // scrim comes up under them (and the tapes step back wherever one would show between the words), with LIGHT UP /
-// YOUR MAP. and the red dot, the Coming soon sticker, "Send it to the crew" (the one thing to do here: navigator.share,
+// YOUR MAP. and the red dot, the Out now sticker, "Send it to the crew" (the one thing to do here: navigator.share,
 // or copy the link) and the hand note. While the end holds, paper heads run the lit lines.
 // Reduced motion: still frames — camera and lights cut between key frames, no slams, no shake, no heads.
 
@@ -96,7 +96,7 @@ export default async function init(root, ctx) {
   const lines = $$('.finale__ln');
   const dot = $('.finale__dot');
   const soon = $('.finale__soon');
-  const beta = $('.finale__beta'); // BETA IS OPEN: the stamp under the sticker, the TestFlight link
+  const beta = $('.finale__beta'); // GET IT: the stamp under the sticker, the App Store link
   const shareBtn = $('[data-fin-share]');
   const shareLabel = $('[data-fin-share-label]');
   const linkLine = $('[data-fin-link]');

@@ -11,7 +11,7 @@
 // lights everything it builds on (the trick itself keeps its state, and Kickflip stays the trick being learned: its
 // landing is the climax, further down). Touch: a tap does the same; the page keeps scrolling.
 // Phone poster: the open band holds the city's lit quarter, its light pools boosted until the camera pulls back.
-// The COMING SOON sticker: pressed, it peels up at a corner; let go, it slaps back down (the sticker sound).
+// The OUT NOW sticker: pressed, it peels up at a corner; let go, it slaps back down (the sticker sound).
 // Reduced motion: still frames that cut at the beats.
 
 import { createMap } from '../map/index.js';
@@ -61,7 +61,7 @@ export default async function init(root, ctx) {
   const sub = $('.hero__sub');
   const foot = $('.hero__foot');
   const cta = $('.hero__cta');
-  const beta = $('.hero__beta'); // the BETA IS OPEN stamp under the sticker: goes down with it on the rip
+  const beta = $('.hero__beta'); // the GET IT stamp (App Store link) under the sticker: goes down with it on the rip
   const drop = $('.hero__drop');
   const beacon = $('.hero__beacon');
   const probe = $('.hero__probe');
@@ -693,7 +693,7 @@ export default async function init(root, ctx) {
     if (e.key === 'Escape') clearFocus();
   };
 
-  // ---------------------------------------------------------------- the COMING SOON sticker
+  // ---------------------------------------------------------------- the OUT NOW sticker
 
   // A statement, not a link: the call to action is at the end of the story. Pressing it peels it up at a corner; let
   // go, it slaps back down with the sticker sound. A scroll that starts on it just lets go.
